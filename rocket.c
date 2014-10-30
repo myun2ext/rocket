@@ -2,6 +2,9 @@
 
 ROCKET rocket(int socket_family, int socket_type, int protocol)
 {
+#ifdef WIN32
+	rocket_wsa_startup();
+#endif
 	return socket(socket_family, socket_type, protocol);
 }
 
@@ -15,7 +18,7 @@ struct sockaddr_in rocket_address(const char* host, unsigned short port)
 	addr;
 }
 
-void fire_rocket(ROCKET rock, const char* host, unsigned short port)
+void fire_tcp_rocket(ROCKET rock, const char* host, unsigned short port)
 {
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
