@@ -2,11 +2,18 @@
 #include "rocket.h"
 #include "rocket/http.h"
 
+void service(ROCKET rock, const struct sockaddr *from_addr, int from_addr_len)
+{
+	char work[256];
+	recv(rock, work, sizeof(work), 0);
+	printf("%s\n", work);
+};
+
 int main()
 {
-	char data[1024 * 256];
-	unsigned int size = get_http_data("www.google.co.jp", 80, "/", data, sizeof(data));
-	printf("Recieved size: %d\n", size);
-	printf("%s\n", data);
-	return 0;
+	ROCKET_RECIEVER_SETTINGS settings;
+	settings.port = 8080;
+	settings.max_queing = 3;
+	settings.callback = service;
+	tcp_rocket_reciever(&settings);
 }

@@ -33,9 +33,10 @@ typedef struct
 {
 	int socket_family, socket_type, protocol;
 	int port, max_queing;
-	void (*callback)(ROCKET);
+	void (*callback)(ROCKET rock, const struct sockaddr *from_addr, int from_addr_len);
 } ROCKET_RECIEVER_SETTINGS;
 
 void rocket_reciever(const ROCKET_RECIEVER_SETTINGS* settings);
+void tcp_rocket_reciever(ROCKET_RECIEVER_SETTINGS* settings);
 
 #endif//__MYUN2_GITHUB_ROCKET__ROCKET_H__
