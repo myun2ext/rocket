@@ -8,34 +8,37 @@ ROCKET rocket(int socket_family, int socket_type, int protocol)
 	return socket(socket_family, socket_type, protocol);
 }
 
-struct sockaddr_in rocket_address(const char* host, unsigned short port)
+struct addrinfo* rocket_address(const char* host, unsigned short port)
 {
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_port = htons(port);
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(host);
-	addr;
+	struct addrinfo hints, *addr;
+	char port_s[6];
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+
+#pragma warning(disable: 4996)
+	sprintf(port_s, "%d", port);
+#pragma warning(default: 4996)
+
+	getaddrinfo(host, port_s, &hints, &addr);
+	return addr;
 }
 
 int fire_tcp_rocket(ROCKET rock, const char* host, unsigned short port)
 {
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_port = htons(port);
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(host);
-	return connect(rock, (struct sockaddr *) &addr, sizeof(addr));
+	struct addrinfo* addr = rocket_address(host, port);
+	int ret= connect(rock, addr->ai_addr, addr->ai_addrlen);
+	freeaddrinfo(addr);
+	return ret;
 }
 
+ 
 int fire_udp_rocket(ROCKET rock, const char* host, unsigned short port)
 {
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_port = htons(port);
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(host);
-	return bind(rock, (struct sockaddr *) &addr, sizeof(addr));
+	struct addrinfo* addr = rocket_address(host, port);
+	int ret= bind(rock, addr->ai_addr, addr->ai_addrlen);
+	freeaddrinfo(addr);
+	return ret;
 }
 
 void destroy_rocket(ROCKET rock)

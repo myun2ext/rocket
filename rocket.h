@@ -16,7 +16,7 @@
 #define ROCKET SOCKET
 
 ROCKET rocket(int socket_family, int socket_type, int protocol);
-struct sockaddr_in rocket_address(const char* host, unsigned short port);
+struct addrinfo* rocket_address(const char* host, unsigned short port);
 int fire_tcp_rocket(ROCKET rock, const char* host, unsigned short port);
 int fire_udp_rocket(ROCKET rock, const char* host, unsigned short port);
 void destroy_rocket(ROCKET rock);

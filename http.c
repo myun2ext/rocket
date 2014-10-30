@@ -12,6 +12,8 @@ ROCKET http_rocket(const char* host)
 int get_http_data(const char* host, unsigned short port, const char* path, char* buffer, unsigned int bufsize)
 {
 	ROCKET rock = tcp_rocket();
+	int reserved_size = 0;
+
 	if ( is_invalid_rocket(rock) ){
 		return -3;
 	}
@@ -26,5 +28,7 @@ int get_http_data(const char* host, unsigned short port, const char* path, char*
 	send(rock, host, strlen(host), 0);
 	send(rock, "\r\n\r\n ", 4, 0);
 
-	return recv(rock, buffer, bufsize, 0);
+	reserved_size = recv(rock, buffer, bufsize, 0);
+	destroy_rocket(rock);
+	return reserved_size;
 }
