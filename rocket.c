@@ -18,24 +18,24 @@ struct sockaddr_in rocket_address(const char* host, unsigned short port)
 	addr;
 }
 
-void fire_tcp_rocket(ROCKET rock, const char* host, unsigned short port)
+int fire_tcp_rocket(ROCKET rock, const char* host, unsigned short port)
 {
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(host);
-	connect(rock, (struct sockaddr *) &addr, sizeof(addr));
+	return connect(rock, (struct sockaddr *) &addr, sizeof(addr));
 }
 
-void fire_udp_rocket(ROCKET rock, const char* host, unsigned short port)
+int fire_udp_rocket(ROCKET rock, const char* host, unsigned short port)
 {
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(host);
-	bind(rock, (struct sockaddr *) &addr, sizeof(addr));
+	return bind(rock, (struct sockaddr *) &addr, sizeof(addr));
 }
 
 void destroy_rocket(ROCKET rock)

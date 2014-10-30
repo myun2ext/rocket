@@ -9,10 +9,15 @@ ROCKET http_rocket(const char* host)
 	return rock;
 }
 
-unsigned int get_http_data(const char* host, unsigned short port, const char* path, char* buffer, unsigned int bufsize)
+int get_http_data(const char* host, unsigned short port, const char* path, char* buffer, unsigned int bufsize)
 {
 	ROCKET rock = tcp_rocket();
-	fire_tcp_rocket(rock, host, port);
+	if ( is_invalid_rocket(rock) ){
+		return -3;
+	}
+	if ( fire_tcp_rocket(rock, host, port) != 0 ){
+		return -2;
+	}
 
 	send(rock, "GET ", 4, 0);
 	send(rock, path, strlen(path), 0);
