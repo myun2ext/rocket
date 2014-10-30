@@ -13,4 +13,13 @@
 	#include <netdb.h>
 #endif
 
+#define ROCKET SOCKET
+
+ROCKET rocket(int socket_family, int socket_type, int protocol);
+struct sockaddr_in rocket_address(const char* host, unsigned short port);
+void fire_rocket(ROCKET rock, const char* host, unsigned short port);
+void fire_udp_rocket(ROCKET rock, const char* host, unsigned short port);
+void destroy_rocket(ROCKET rock);
+ROCKET listen_rocket(ROCKET rock, unsigned short port, int max_queing);
+
 #endif//__MYUN2_GITHUB_ROCKET__ROCKET_H__
