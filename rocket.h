@@ -5,15 +5,22 @@
 	#include <ws2tcpip.h>
 	#include <Wspiapi.h>
 	#include <winsock2.h>
+	#define ROCKET SOCKETS
+
+	#define is_valid_rocket(r)		(r != INVALID_SOCKET)
+	#define is_invalid_rocket(r)	(r == INVALID_SOCKET)
 #else
 	#include <sys/types.h>
 	#include <sys/socket.h>
 	#include <netinet/in.h>
 	#include <arpa/inet.h>
 	#include <netdb.h>
+	#define ROCKET int
+
+	#define is_valid_rocket(r)		(r != -1)
+	#define is_invalid_rocket(r)	(r == -1)
 #endif
 
-#define ROCKET SOCKET
 
 ROCKET rocket(int socket_family, int socket_type, int protocol);
 struct addrinfo* rocket_address(const char* host, unsigned short port);
@@ -24,9 +31,6 @@ ROCKET listen_rocket(ROCKET rock, unsigned short port, int max_queing);
 
 #define tcp_rocket()	rocket(AF_INET, SOCK_STREAM, 0)
 #define udp_rocket()	rocket(AF_INET, SOCK_DGRAM, 0)
-
-#define is_valid_rocket(r)		(r != INVALID_SOCKET)
-#define is_invalid_rocket(r)	(r == INVALID_SOCKET)
 
 /* reciever */
 typedef struct

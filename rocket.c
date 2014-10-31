@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <memory.h>
 #include "rocket.h"
 
 ROCKET rocket(int socket_family, int socket_type, int protocol)
@@ -56,7 +58,11 @@ ROCKET listen_rocket(ROCKET rock, unsigned short port, int max_queing)
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
+#ifdef WIN32
 	addr.sin_addr.S_un.S_addr = INADDR_ANY;
+#else
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+#endif
 
 	bind(rock, (struct sockaddr*)&addr, sizeof(addr));
 	listen(rock, max_queing);
